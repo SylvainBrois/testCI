@@ -1,0 +1,36 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:5000"
+    volumes:
+      - .:/code
+    environment:
+      FLASK_DEBUG: "true"
+    networks:
+      - internal
+      - observability
+    depends_on:
+      - redis
+
+  redis:
+    image: "redis:alpine"
+    volumes:
+      - redis_data:/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", ""]
+
+  # jaeger:
+  #   image: jaeger
+  #   networks:
+  #     - observability
+
+volumes:
+  redis_data:
+
+networks:
+  observability:
+  internal:
+    name: app_internal
